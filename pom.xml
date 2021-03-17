@@ -50,5 +50,88 @@
 			</plugin>
 		</plugins>
 	</build>
+	<!-- Create a profile with frontend-maveng-plugin to automate 
+	running npm build on frontend and copying the build src/main/resources/static -->
+	<profiles>
+		<profile>
+			<id>build-frontend</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.github.eirslett</groupId>
+						<artifactId>frontend-maven-plugin</artifactId>
+						<!-- Use the latest released version:
+					              https://repo1.maven.org/maven2/com/github/eirslett/frontend-maven-plugin/ -->
+						<version>1.11.2</version>
+						<configuration>
+							<nodeVersion>v4.6.0</nodeVersion>
+							<!-- This is where the commands in the executions will be run-->
+							<workingDirectory>src/frontend</workingDirectory>
+						</configuration>
+						<executions>
+							<!-- Install Node and NPM -->
+							<execution>
+								<id>install node and npm</id>
+								<goals>
+									<goal>install-node-and-npm</goal>
+								</goals>
+								<configuration>
+									<nodeVersion>v15.4.0</nodeVersion>
+									<npmVersion>7.3.0</npmVersion>
+								</configuration>
+							</execution>
+							<!-- Install NPM packages -->
+							<execution>
+								<id>npm install</id>
+								<goals>
+									<goal>npm</goal>
+								</goals>
+								<configuration>
+									<arguments>install</arguments>
+								</configuration>
+							</execution>
+							<!-- Build frontend-->
+							<execution>
+								<id>npm run build</id>
+								<goals>
+									<goal>npm</goal>
+								</goals>
+								<configuration>
+									<arguments>run build</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<!--  Use Maven Resources Plugin to automate copying the react frontend build files into src/main/resources/static 
+						This actually copies the build directly into the generated target folder instead. 
+						The target/classes folder might be hidden in the Eclipse Project Explorer
+					-->
+					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-build-folder</id>
+								<phase>process-classes</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<resources>
+										<resource>
+											<directory>src/frontend/build</directory>
+										</resource>
+									</resources>
+									<outputDirectory>${basedir}/target/classes/static</outputDirectory>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
