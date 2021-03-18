@@ -18,6 +18,9 @@
 * Show all containers running (local)
 	* `docker ps -a`
 
+* Remove docker image (local)
+	* `docker image rm {image name}:{tag}
+	
 * Remove running container
 	* `docker rm -f {container name}`
 	
@@ -29,3 +32,23 @@
 	* `./mvwn clean install jib:build -Djib.to.image={dockerUsername}/{repositoryName}:{Tag i.e. v1, v2, latest}`
 	* ex: `./mvwn clean install jib:build -Djib.to.image=bguiang/my-project:v1`
 	
+### Running Maven Profiles for Jib (defined in pom.xml). Replaces the above commands
+* Build docker image and upload to dockerhub with custom tag and latest tag
+	* `./mvnw clean install -P build-frontend -P jib-push-to-dockerhub -Dapp.image.tag=1`
+	* The `-P` refers to profile
+	* The `build-frontend` profile is active by default
+		* It installs both Node and NPM on the src/frontend (the react frontend) using the **frontend-maven-plugin** and runs `npm install` to install npm packages and then `npm run build` to build the react project
+		* Then it copies the react build files into the Maven project's src/target/classes/static using the **maven-resources-plugin**
+	* The `jib-push-to-dockerhub` is not active by default
+		* It creates the docker image using the **jib-maven-plugin** to the defined docker repository path twice. First with a custom tag and another with the "latest" tag
+	* The `-Dapp.image.tag` argument is the custom tag (see pom.xml app.image.tag)
+* Build docker image locally with custom tag and latest tag
+	* `./mvnw clean install -P build-frontend -P jib-push-to-local -Dapp.image.tag=1`
+	* The `-P` refers to profile
+	* The `build-frontend` profile is active by default
+		* It installs both Node and NPM on the src/frontend (the react frontend) using the **frontend-maven-plugin** and runs `npm install` to install npm packages and then `npm run build` to build the react project
+		* Then it copies the react build files into the Maven project's src/target/classes/static using the **maven-resources-plugin**
+	* The `jib-push-to-local` is not active by default
+		* It creates the docker image using the **jib-maven-plugin** to the defined docker repository path twice. First with a custom tag and another with the "latest" tag
+	* The `-Dapp.image.tag` argument is the custom tag (see pom.xml app.image.tag)
+		
