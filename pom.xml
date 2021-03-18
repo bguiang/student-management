@@ -82,9 +82,6 @@
 				        	<from>
 				        		<image>openjdk:15</image>
 				        	</from>
-				        	<to>
-				        		<image>docker.io/bguiang/${app.image.name}:${app.image.tag}</image>
-				        	</to>
 				        	<container>
 				        		<ports>8080</ports>
 				        	</container>
@@ -135,9 +132,6 @@
 				        	<from>
 				        		<image>openjdk:15</image>
 				        	</from>
-				        	<to>
-				        		<image>docker.io/bguiang/${app.image.name}:${app.image.tag}</image>
-				        	</to>
 				        	<container>
 				        		<ports>8080</ports>
 				        	</container>
