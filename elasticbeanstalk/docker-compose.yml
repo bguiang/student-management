@@ -1,0 +1,10 @@
+# Upload this file to AWS elastic beanstalk to create the docker container
+version: "3.8"
+services:
+  backend:
+    image: "bguiang/springboot-react-fullstack:latest" #dockerhub image
+    ports:
+      - "80:8080" # Spring Boot app listens to port 8080
+    # if something goes wrong, restart the app. Check AWS Auto Scaling Groups on the AWS dashboard. 
+    # The Auto Scaling Groups will make sure there is at least one EC2 instance of this application
+    restart: "always" 
