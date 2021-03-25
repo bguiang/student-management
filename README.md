@@ -52,3 +52,23 @@
 		* It creates the docker image using the **jib-maven-plugin** to the defined docker repository path twice. First with a custom tag and another with the "latest" tag
 	* The `-Dapp.image.tag` argument is the custom tag (see pom.xml app.image.tag)
 		
+### Running Postgres DB on Docker container
+* See https://hub.docker.com/_/postgres
+* Create a docker network called "db". This network will communicate with the postgres docker container and a container using psql
+	* `docker network create {network name}`
+	* ex: `docker network create db`
+* Create a docker container for Postgres db and save data to local machine (volume)
+	* first create a local folder where the volume will be saved (mounted)
+	* run the following command inside this folder
+		* `docker run --name {container_name} -p {host_port}:{container_port} --network={network_name} -v "$PWD:/var/lib/postgresql/data" -e POSTGRES_PASSWORD={db_password} -d postgres:{tag}`
+		* ex: `docker run --name db -p 5432:5432 --network=db -v "$PWD:/var/lib/postgresql/data" -e POSTGRES_PASSWORD=password -d postgres:alpine`
+		* This will populate the $PWD folder which is the current folder with the database data
+		* $PWD does not work on windows so just open the mounting folder and copy its path and paste it in place of $PWD
+* To delete a network
+	* `docker network rm {network name}`
+	* ex: `docker network rm db`
+* Connecting to Postgres db using PSQL Container
+	* `docker run -it --rm --network={network_name} postgres:{tag} psql -h {postgres_container_name} -U {postgres_user}`
+	* ex: `docker run -it --rm --network=db postgres:alpine psql -h db -U postgres`
+	* The `--rm` command terminates the PSQL container after quitting
+	* The PSQL Container has to communicate with the Postgres Container using the same network
