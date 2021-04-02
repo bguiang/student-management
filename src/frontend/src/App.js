@@ -1,6 +1,16 @@
 import logo from "./logo.svg";
 import "./App.css";
-import { Layout, Menu, Breadcrumb, Table, Spin, Empty } from "antd";
+import {
+  Layout,
+  Menu,
+  Breadcrumb,
+  Table,
+  Spin,
+  Empty,
+  Button,
+  Badge,
+  Tag,
+} from "antd";
 import {
   DesktopOutlined,
   PieChartOutlined,
@@ -8,20 +18,52 @@ import {
   TeamOutlined,
   UserOutlined,
   LoadingOutlined,
+  PlusOutlined,
 } from "@ant-design/icons";
 import { getAllStudents } from "./client";
 import { useState, useEffect } from "react";
+import StudentDrawerForm from "./StudentDrawerForm";
+import Avatar from "antd/lib/avatar/avatar";
+import { render } from "@testing-library/react";
+import Actions from "./Actions";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
+const TheAvatar = ({ name }) => {
+  const trim = name.trim();
+  if (trim.length === 0) {
+    return <Avatar icon={UserOutlined} />;
+  }
+
+  const split = trim.split(" ");
+  if (split.length === 1) {
+    return <Avatar>{name.charAt(0)}</Avatar>;
+  }
+
+  return (
+    <Avatar>
+      `${name.charAt(0)}${name.charAt(name.length - 1)}`
+    </Avatar>
+  );
+};
+
 function App() {
   const [students, setStudents] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
   const [fetching, setFetching] = useState(true);
+  const [showDrawer, setShowDrawer] = useState(false);
 
   const columns = [
+    {
+      title: "",
+      dataIndex: "avatar",
+      key: "avatar",
+      render: (text, student) => {
+        return <TheAvatar name={student.name} />;
+      },
+    },
     {
       title: "Id",
       dataIndex: "id",
@@ -41,6 +83,14 @@ function App() {
       title: "Gender",
       dataIndex: "gender",
       key: "gender",
+    },
+    {
+      title: "Actions",
+      dataIndex: "actions",
+      key: "actions",
+      render: (text, student) => {
+        return <Actions student={student} fetchStudents={fetchStudents} />;
+      },
     },
   ];
 
@@ -67,15 +117,38 @@ function App() {
       return <Empty />;
     } else {
       return (
-        <Table
-          dataSource={students}
-          columns={columns}
-          bordered
-          title={() => "Students"}
-          pagination={{ pageSize: 50 }}
-          scroll={{ y: 240 }}
-          rowKey={(student) => student.id}
-        />
+        <div>
+          <Table
+            dataSource={students}
+            columns={columns}
+            bordered
+            title={() => (
+              <div>
+                <Tag style={{ marginLeft: "10px" }}>Number of students</Tag>
+                <Badge count={students.length} className="site-badge-count-4" />
+                <br />
+                <br />
+                <Button
+                  onClick={() => setShowDrawer(!showDrawer)}
+                  type="primary"
+                  shape="round"
+                  icon={<PlusOutlined />}
+                  size="medium"
+                >
+                  Add New Student
+                </Button>
+              </div>
+            )}
+            pagination={{ pageSize: 50 }}
+            scroll={{ y: 500 }}
+            rowKey={(student) => student.id}
+          />
+          <StudentDrawerForm
+            showDrawer={showDrawer}
+            setShowDrawer={setShowDrawer}
+            fetchStudents={fetchStudents}
+          />
+        </div>
       );
     }
   };
