@@ -1,5 +1,14 @@
 package com.bernardguiang.studentmanagement.student;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -15,10 +24,24 @@ import lombok.ToString;
 //@EqualsAndHashCode
 //@NoArgsConstructor
 //@AllArgsConstructor
+@Entity
+@Table
 public class Student {
+	@Id
+	@SequenceGenerator(
+			name = "student_sequence",
+			sequenceName = "student_sequence",
+			allocationSize = 1 //increment the sequence by 1
+	)
+	@GeneratedValue(
+		// IMPORTANT: Do not add data directly through psql. The sequence will not be updated
+		generator = "student_sequence",
+		strategy = GenerationType.SEQUENCE
+	)
 	private Long id;
 	private String name;
 	private String email;
+	@Enumerated(EnumType.STRING)
 	private Gender gender;
 	
 	public Student() {
@@ -27,6 +50,13 @@ public class Student {
 	public Student(Long id, String name, String email, Gender gender) {
 		super();
 		this.id = id;
+		this.name = name;
+		this.email = email;
+		this.gender = gender;
+	}
+	
+	public Student(String name, String email, Gender gender) {
+		super();
 		this.name = name;
 		this.email = email;
 		this.gender = gender;

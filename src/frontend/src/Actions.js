@@ -14,11 +14,18 @@ const Actions = ({ student, fetchStudents }) => {
         fetchStudents();
         successNotification(
           "Student successfully deleted",
-          `${s.name} was added to the system`
+          `${s.name} was deleted from the system`
         );
       })
       .catch((err) => {
         console.log(err);
+        err.response.json().then((res) => {
+          console.log(res);
+          errorNotification(
+            "There was an issue",
+            `${res.message} [statusCode: ${res.status}]`
+          );
+        });
       });
   };
 

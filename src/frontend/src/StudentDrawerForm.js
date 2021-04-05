@@ -27,7 +27,13 @@ function StudentDrawerForm({ showDrawer, setShowDrawer, fetchStudents }) {
       })
       .catch((err) => {
         console.log(err);
-        //errorNotification()
+        err.response.json().then((res) => {
+          console.log(res);
+          errorNotification(
+            "There was an issue",
+            `${res.message} [statusCode: ${res.status}]`
+          );
+        });
       })
       .finally(() => {
         setSubmitting(false);

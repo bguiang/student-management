@@ -26,6 +26,7 @@ import StudentDrawerForm from "./StudentDrawerForm";
 import Avatar from "antd/lib/avatar/avatar";
 import { render } from "@testing-library/react";
 import Actions from "./Actions";
+import { errorNotification } from "./Notification";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -100,6 +101,18 @@ function App() {
       .then((data) => {
         console.log(data);
         setStudents(data);
+      })
+      .catch((error) => {
+        console.log(error.response);
+        error.response.json().then((res) => {
+          console.log(res);
+          errorNotification(
+            "There was an issue",
+            `${res.message} [statusCode: ${res.status}]`
+          );
+        });
+      })
+      .finally(() => {
         setFetching(false);
       });
   };
