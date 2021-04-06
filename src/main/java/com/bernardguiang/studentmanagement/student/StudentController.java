@@ -3,6 +3,8 @@ package com.bernardguiang.studentmanagement.student;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +30,7 @@ public class StudentController {
 	}
 	
 	@PostMapping()
-	public void addStudent(@RequestBody Student student) {
+	public void addStudent(@Valid @RequestBody Student student) { // @Valid the validation constraints on Student.java
 		// TODO: check if email is taken
 		studentService.addStudent(student);
 	}

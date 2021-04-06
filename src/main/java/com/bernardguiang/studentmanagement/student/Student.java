@@ -8,13 +8,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 //@Data could replace all the lombok annotations below
 // Lombok annotations replacing typical boilerplate (constructor, getter, and setter). Not working with eclipse currently
@@ -39,8 +35,14 @@ public class Student {
 		strategy = GenerationType.SEQUENCE
 	)
 	private Long id;
+	
+	@NotBlank
 	private String name;
+	
+	@Email
 	private String email;
+	
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	private Gender gender;
 	
