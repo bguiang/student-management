@@ -1,5 +1,6 @@
 package com.bernardguiang.studentmanagement.student;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -37,13 +38,16 @@ public class Student {
 	private Long id;
 	
 	@NotBlank
+	@Column(nullable = false)
 	private String name;
 	
 	@Email
+	@Column(nullable = false, unique = true)
 	private String email;
 	
 	@NotNull
 	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private Gender gender;
 	
 	public Student() {

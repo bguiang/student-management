@@ -30,7 +30,7 @@ public class StudentController {
 	}
 	
 	@PostMapping()
-	public void addStudent(@Valid @RequestBody Student student) { // @Valid the validation constraints on Student.java
+	public void addStudent(@Valid @RequestBody Student student) { // @Valid activates the validation constraints on Student.java
 		// TODO: check if email is taken
 		studentService.addStudent(student);
 	}
