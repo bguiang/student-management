@@ -32,7 +32,7 @@
 	* `./mvwn clean install jib:build -Djib.to.image={dockerUsername}/{repositoryName}:{Tag i.e. v1, v2, latest}`
 	* ex: `./mvwn clean install jib:build -Djib.to.image=bguiang/my-project:v1`
 	
-### Running Maven Profiles for Jib (defined in pom.xml). Replaces the above commands
+### Running Maven Profiles for Jib (defined in pom.xml). Replaces the above commands for building and uploading the image to dockerhub
 * Build docker image and upload to dockerhub with custom tag and latest tag
 	* `./mvnw clean install -P build-frontend -P jib-push-to-dockerhub -Dapp.image.tag=1`
 	* The `-P` refers to profile
@@ -72,3 +72,14 @@
 	* ex: `docker run -it --rm --network=db postgres:alpine psql -h db -U postgres`
 	* The `--rm` command terminates the PSQL container after quitting
 	* The PSQL Container has to communicate with the Postgres Container using the same network
+### Using AWS RDS
+* Go to elastic beanstalk and go configuration
+* Edit and create the database
+* Create a second application properties file and name it application-dev.properties
+* On the Run Configurations when running locally, add an environment variable "SPRING_PROFILES_ACTIVE" and set the value to "dev"
+	* the value needs to match the application-{value}.properties file name
+	* this will run the app using the application-dev.properties file instead of the default properties file
+* Set up a Security Group for RDS
+	* Go to the RDS section on AWS and click the database created for your beanstalk
+	* Go to the active VPC Security Group
+	* Go to the Inbound rules tab

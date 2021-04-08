@@ -8,3 +8,5 @@ services:
     # if something goes wrong, restart the app. Check AWS Auto Scaling Groups on the AWS dashboard. 
     # The Auto Scaling Groups will make sure there is at least one EC2 instance of this application
     restart: "always" 
+    environment: 
+      SPRING_PROFILES_ACTIVE: dev
